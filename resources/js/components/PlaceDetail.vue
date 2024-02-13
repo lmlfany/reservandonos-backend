@@ -44,84 +44,10 @@
     </div>
 </template>
 
-  <script>
-  import axios from 'axios';
-
-  export default {
-    data() {
-      return {
-        places: [],
-        nextPage: 0,
-        perPage: 9
-      };
-    },
-    mounted() {
-      this.fetchPlaces();
-    },
-    methods: {
-      async fetchPlaces() {
-        try {
-          const response = await axios.get('/places');
-          this.places = response.data.places.slice(0, this.perPage);
-        } catch (error) {
-          console.error('Error fetching places:', error);
+<script>
+    export default {
+        mounted() {
+            console.log('Component mounted.')
         }
-      },
-      async loadMore() {
-        try {
-          const response = await axios.get(`/places?page=${this.nextPage}`);
-          const newPlaces = response.data.places;
-          if (newPlaces.length > 0) {
-            this.places.splice(0);
-            this.places = [...this.places, ...newPlaces];
-            this.nextPage++;
-          } else {
-            console.log('No hay más lugares disponibles');
-          }
-        } catch (error) {
-          console.error('Error fetching more places:', error);
-        }
-      },
-      toggleLike(place) {
-  axios.post('/like', { place_id: place.id })
-    .then(response => {
-      place.liked = !place.liked;
-      console.log(response.data.message);
-    })
-    .catch(error => {
-      console.error('Error al dar like:', error);
-    });
-},
-async fetchPlaceDetails(placeId) {
-    try {
-      const response = await axios.get(`/places/getPlaceById/${place.id}`);
-      const placeDetails = response.data.data;
-
-    } catch (error) {
-      console.error('Error fetching place details:', error);
     }
-  },
-      redirectToReservationForm(placeId) {
-        window.location.href = `/reservation-form?placeId=${placeId}`;
-}
-    }
-  };
-  </script>
-
-  <style>
-      .btn-like {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      z-index: 1;
-    }
-  .liked .btn-like i {
-    color: red;
-  }
-
-
-.card-title {
-  font-size: 1.25rem;
-  margin-top: 8px;
-}
-  </style>
+</script>

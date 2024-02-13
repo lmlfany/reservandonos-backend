@@ -7,34 +7,44 @@ use Illuminate\Http\Request;
 class InteractionController extends Controller
 {
     public function like(Request $request)
-    {
-        // Validar la solicitud
-        $request->validate([
-            'place_id' => 'required|exists:places,id',
-        ]);
+{
+    $request->validate([
+        'place_id' => 'required|exists:places,id',
+    ]);
 
-        // Nueva instancia y guardar el like
-        Interaction::create([
-            'place_id' => $request->place_id,
-            'user_id' => auth()->id(),
-        ]);
+    // Verificar si ya existe
+    $existingInteraction = Interaction::where('place_id', $request->place_id)
+                                       ->where('user_id', auth()->id())
+                                       ->first();
 
-        // Devolver una respuesta
-        return response()->json(['message' => 'Like guardado con éxito']);
+    if ($existingInteraction) {
+        return response()->json(['error' => 'Ya has dado like a este lugar previamente'], 422);
     }
 
-    // Eliminar un like
-    public function unlike(Request $request)
-    {
-        $request->validate([
-            'place_id' => 'required|exists:places,id',
-        ]);
+    // Nueva interacción
+    Interaction::create([
+        'place_id' => $request->place_id,
+        'user_id' => auth()->id(),
+    ]);
 
-        // Buscar y eliminar el like
-        Interaction::where('place_id', $request->place_id)
-                   ->where('user_id', auth()->id()) // Opcional: Si deseas verificar qué usuario dio like
-                   ->delete();
+    return response()->json(['message' => 'Like guardado con éxito']);
+}
 
-        return response()->json(['message' => 'Like eliminado con éxito']);
+public function unlike(Request $request)
+{
+    $request->validate([
+        'place_id' => 'required|exists:places,id',
+    ]);
+
+    // Buscar y eliminar
+    $deleted = Interaction::where('place_id', $request->place_id)
+                          ->where('user_id', auth()->id())
+                          ->delete();
+
+    if (!$deleted) {
+        return response()->json(['error' => 'No se encontró ningún like para eliminar'], 404);
     }
+
+    return response()->json(['message' => 'Like eliminado con éxito']);
+}
 }
