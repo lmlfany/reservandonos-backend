@@ -11,8 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('interaccions', function (Blueprint $table) {
+        Schema::create('interactions', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('place_id');
+            $table->unsignedBigInteger('user_id'); // Usuario que dio like
+
+            //$table->foreign('place_id')->references('id')->on('places')->onDelete('cascade');
+
+           // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

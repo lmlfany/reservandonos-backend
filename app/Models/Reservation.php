@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Interaccion extends Model
+class Reservation extends Model
 {
     use HasFactory;
+    protected $fillable = ['client_name', 'client_lastname', 'reservation_date', 'place_id'];
 }

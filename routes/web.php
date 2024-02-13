@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PlaceController;
+use App\Http\Controllers\ReservationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +16,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('tasks');
 });
+Route::get('/fetch', [PlaceController::class, 'fetchInsert'])->name('fetch');
+Route::get('/places', [PlaceController::class, 'show'])->name('places');
+Route::get('/reservation-form', [ReservationController::class, 'showForm'])->name('reservation-form');
+Route::post('/reservations', [ReservationController::class, 'store']);
+
