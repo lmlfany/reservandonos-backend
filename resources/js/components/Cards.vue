@@ -30,7 +30,7 @@
                     <p class="card-text">{{ place.schedule }}</p>
                     <p class="card-text">{{ place.location }}</p>
                     <v-row class="mt-2 mb-1 justify-center">
-                        <p class="card-text">{{ place.price_range }}</p>
+                        <p class="card-text mr-16">{{ place.price_range }}</p>
                         <v-icon v-for="n in place.score" :key="n" color="yellow" >fa fa-star</v-icon>
                     </v-row>
                     <v-btn color="primary" @click="redirectToReservationForm(place.id)">Reservar</v-btn>
