@@ -20,6 +20,7 @@ import ExampleComponent from './components/ExampleComponent.vue';
 import Cards from './components/Cards.vue';
 import Navbar from './components/Navbar.vue';
 import Reservation from './components/RerservationForm.vue';
+import PlaceDetail from './components/PlaceDetail.vue';
 
 const app = createApp({});
 
@@ -27,6 +28,7 @@ app.component('example-component', ExampleComponent);
 app.component('cards', Cards);
 app.component('navbar', Navbar);
 app.component('reservation-form', Reservation);
+app.component('place-detail', PlaceDetail);
 
 const vuetify = createVuetify({
     components,

@@ -1,53 +1,115 @@
 <template>
-    <div class="d-flex align-items-center flex-column" style="margin-top: 60px;">
-      <v-row >
-        <v-col v-for="(place, index) in places" :key="index" cols="12" md="4">
-          <v-card class="mb-4 fill-height" style="max-height: 600px;">
-            <!-- Botón de "Me gusta" -->
-            <v-btn class="btn-like" @click="toggleLike(place)">
-                <v-icon :color="place.liked ? 'red' : 'grey'">fa fa-heart</v-icon>
-            </v-btn>
-            <!-- Imagen del lugar -->
-            <v-img :src="place.image_url" alt="Place Image" height="200px" cover @click="fetchPlaceDetails(place.id)"></v-img>
-            <v-card-item class="d-flex" >
-                <v-card-text>
+    <v-card :loading="loading" class="mx-auto my-12" max-width="1200" v-if="placeDetail">
+      <v-row>
+        <v-col cols="6">
+          <v-card-item>
+            <v-card-title>{{ placeDetail.name }}</v-card-title>
+            <v-card-text class="mt-8">
 
-                    <v-row align="center">
-                      <!-- Logo del lugar -->
-                      <v-avatar class="mr-2">
-                        <v-img :src="place.logo_url" alt="Place Logo"></v-img>
-                      </v-avatar>
-                      <h5 class="card-title" @click="fetchPlaceDetails(place.id)">{{ place.name }}</h5>
-                    </v-row>
-                </v-card-text>
-              <div style="margin-top: 16px;">
-                <!-- Categorías del lugar -->
-                <v-chip-group class="px-4">
-                    <v-chip v-for="category in place.categories.split(',')" :key="category" outlined>{{ category }}</v-chip>
+                <!-- Horarios de trabajo -->
+                <v-divider class="mx-4 mb-1"></v-divider>
+                <v-card-title>Horarios de trabajo</v-card-title>
+
+                <div class="px-4">
+                  <v-chip-group v-if="placeDetail.schedules && placeDetail.schedules.length > 0">
+                    <v-chip v-for="schedule in placeDetail.schedules" :key="schedule.weekday">
+                      {{ schedule.weekday }}: {{ schedule.start }} - {{ schedule.end }}
+                    </v-chip>
                 </v-chip-group>
-                <v-card-text>
+                  <span v-else>No se han encontrado horarios de trabajo.</span>
+                </div>
 
-                    <p class="card-text">{{ place.schedule }}</p>
-                    <p class="card-text">{{ place.location }}</p>
-                    <v-row class="mt-2 mb-1 justify-center">
-                        <p class="card-text">{{ place.price_range }}</p>
-                        <v-icon v-for="n in place.score" :key="n" color="yellow" >fa fa-star</v-icon>
-                    </v-row>
-                    <v-btn color="primary" @click="redirectToReservationForm(place.id)">Reservar</v-btn>
-                </v-card-text>
-              </div>
-            </v-card-item>
-          </v-card>
+                <!-- Amenidades del lugar -->
+                <v-divider class="mx-4 mb-1"></v-divider>
+                <v-card-title class="mt-8">Amenidades</v-card-title>
+                <div class="px-4">
+                    <ul>
+                    <li v-for="amenity in placeDetail.amenities" :key="amenity.id">{{ amenity.name }}</li>
+                </ul>
+                <span v-if="!placeDetail.amenities || placeDetail.amenities.length === 0">No se han encontrado amenidades.</span>
+                </div>
+
+                <!-- Botón de Reservar -->
+                <div class="text-center mt-4">
+                    <v-btn  class="mr-16">
+                        <v-icon color="primary">fa fa-heart</v-icon>
+                    </v-btn>
+                    <v-btn color="primary" class="mr-16" @click="redirectToReservationForm(placeId)">Reservar</v-btn>
+                    <!-- Botón de "Me gusta" -->
+                </div>
+            </v-card-text>
+        </v-card-item>
+    </v-col>
+
+    <v-col cols="6">
+        <v-card-title v-if="placeDetail.gallery && placeDetail.gallery.length > 0">Galería</v-card-title>
+
+<v-carousel hide-delimiters
+  v-if="placeDetail.gallery && placeDetail.gallery.length > 0"
+  cycle
+  height="600"
+  hide-delimiter-background
+  show-arrows="hover"
+>
+  <v-carousel-item
+    v-for="(image, index) in placeDetail.gallery"
+    :key="index"
+  >
+    <v-sheet height="100%">
+      <v-img :src="image.file" aspect-ratio="1" contain="cover" :preload="index === 0"></v-img>
+    </v-sheet>
+  </v-carousel-item>
+</v-carousel>
+
         </v-col>
       </v-row>
-      <v-btn @click="loadMore" class="btn btn-primary mt-4">Mostrar más</v-btn>
-    </div>
-</template>
+    </v-card>
+    <span v-else>Cargando detalles del lugar...</span>
+  </template>
 
 <script>
-    export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
+export default {
+  props: {
+    placeId: {
+      type: Number,
+      required: true
+    },
+    placeDetails: {
+      type: Object,
+      required: true
     }
+  },
+  data() {
+    return {
+      loading: false,
+      placeDetail: {}
+    };
+  },
+  mounted() {
+    this.placeDetail = this.$props.placeDetails;
+
+    if (!this.placeDetail || typeof this.placeDetail !== 'object') {
+      console.error('Invalid place details provided.');
+      return;
+    }
+    this.placeDetail.gallery = JSON.parse(this.placeDetail.gallery);
+    this.placeDetail.schedules = JSON.parse(this.placeDetail.schedules);
+    this.placeDetail.amenities = JSON.parse(this.placeDetail.amenities);
+  },
+  methods: {
+    reserve() {
+      this.loading = true;
+      setTimeout(() => (this.loading = false), 2000);
+    },
+    redirectToReservationForm(placeId) {
+        window.location.href = `/reservation-form?placeId=${placeId}`;
+},
+
+  }
+};
 </script>
+
+<style>
+
+
+</style>

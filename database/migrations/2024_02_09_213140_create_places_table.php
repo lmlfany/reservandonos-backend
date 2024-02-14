@@ -26,7 +26,7 @@ class CreatePlacesTable extends Migration
             $table->string('name');
             $table->string('shortName');
             $table->string('main_category')->nullable();
-            $table->string('categories');
+            $table->string('categories')->default('Sin categoria');
             $table->string('schedule')->nullable();
             $table->integer('score')->default(0);
             $table->string('price_range');

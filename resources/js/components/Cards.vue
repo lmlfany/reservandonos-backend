@@ -1,14 +1,14 @@
 <template>
     <div class="d-flex align-items-center flex-column" style="margin-top: 60px;">
       <v-row >
-        <v-col v-for="(place, index) in places" :key="index" cols="12" md="4">
+        <v-col v-for="(place, index) in placesToShow" :key="index" cols="12" md="4">
           <v-card class="mb-4 fill-height" style="max-height: 600px;">
             <!-- Botón de "Me gusta" -->
             <v-btn class="btn-like" @click="toggleLike(place)">
                 <v-icon :color="place.liked ? 'red' : 'grey'">fa fa-heart</v-icon>
             </v-btn>
             <!-- Imagen del lugar -->
-            <v-img :src="place.image_url" alt="Place Image" height="200px" cover @click="fetchPlaceDetails(place.id)"></v-img>
+            <v-img :src="place.image_url" alt="Place Image" height="200px" cover @click="redirectToDetailPage(place.id)"></v-img>
             <v-card-item class="d-flex" >
                 <v-card-text>
 
@@ -17,7 +17,7 @@
                       <v-avatar class="mr-2">
                         <v-img :src="place.logo_url" alt="Place Logo"></v-img>
                       </v-avatar>
-                      <h5 class="card-title" @click="fetchPlaceDetails(place.id)">{{ place.name }}</h5>
+                      <h5 class="card-title" @click="redirectToDetailPage(place.id)">{{ place.name }}</h5>
                     </v-row>
                 </v-card-text>
               <div style="margin-top: 16px;">
@@ -33,7 +33,10 @@
                         <p class="card-text mr-16">{{ place.price_range }}</p>
                         <v-icon v-for="n in place.score" :key="n" color="yellow" >fa fa-star</v-icon>
                     </v-row>
-                    <v-btn color="primary" @click="redirectToReservationForm(place.id)">Reservar</v-btn>
+                    <v-row class="mt-2 mb-1 justify-center">
+                        <v-btn color="primary" class="mr-16" @click="redirectToReservationForm(place.id)">Reservar</v-btn>
+                        <v-btn color="primary" @click="redirectToDetailPage(place.id)">Ver detalles</v-btn>
+                    </v-row>
                 </v-card-text>
               </div>
             </v-card-item>
@@ -51,6 +54,7 @@
     data() {
       return {
         places: [],
+        placesToShow: [],
         nextPage: 0,
         perPage: 9
       };
@@ -62,26 +66,23 @@
       async fetchPlaces() {
         try {
           const response = await axios.get('/places');
-          this.places = response.data.places.slice(0, this.perPage);
+          this.places = response.data.places;
+            this.loadMore();
         } catch (error) {
           console.error('Error fetching places:', error);
         }
       },
-      async loadMore() {
-        try {
-          const response = await axios.get(`/places?page=${this.nextPage}`);
-          const newPlaces = response.data.places;
-          if (newPlaces.length > 0) {
-            this.places.splice(0);
-            this.places = [...this.places, ...newPlaces];
-            this.nextPage++;
-          } else {
-            console.log('No hay más lugares disponibles');
-          }
-        } catch (error) {
-          console.error('Error fetching more places:', error);
-        }
-      },
+      loadMore() {
+      const startIndex = this.nextPage * this.perPage;
+      const endIndex = startIndex + this.perPage;
+      const newPlaces = this.places.slice(startIndex, endIndex);
+      if (newPlaces.length > 0) {
+        this.placesToShow = [...this.placesToShow, ...newPlaces];
+        this.nextPage++;
+      } else {
+        console.log('No hay más lugares disponibles');
+      }
+    },
       toggleLike(place) {
   axios.post('/like', { place_id: place.id })
     .then(response => {
@@ -92,16 +93,13 @@
       console.error('Error al dar like:', error);
     });
 },
-async fetchPlaceDetails(placeId) {
-    try {
-      const response = await axios.get(`/places/getPlaceById/${place.id}`);
-      const placeDetails = response.data.data;
+redirectToDetailPage(placeId) {
 
-    } catch (error) {
-      console.error('Error fetching place details:', error);
-    }
-  },
-      redirectToReservationForm(placeId) {
+  const detailPageUrl = `/place-detail/${placeId}`;
+
+  window.open(detailPageUrl, '_blank');
+},
+    redirectToReservationForm(placeId) {
         window.location.href = `/reservation-form?placeId=${placeId}`;
 }
     }
