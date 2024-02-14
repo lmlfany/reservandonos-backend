@@ -8,15 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Interaction extends Model
 {
     use HasFactory;
-    protected $fillable = ['place_id', 'user_id']; // Campos que pueden ser llenados en masa
+    protected $fillable = ['place_id', 'user_id'];
 
-    // Relación con el modelo Place
+
     public function place()
     {
         return $this->belongsTo(Place::class);
     }
 
-    // Relación con el modelo User
     public function user()
     {
         return $this->belongsTo(User::class);

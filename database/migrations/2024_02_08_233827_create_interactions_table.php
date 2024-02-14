@@ -13,12 +13,16 @@ return new class extends Migration
     {
         Schema::create('interactions', function (Blueprint $table) {
             $table->id();
+
             $table->unsignedBigInteger('place_id');
-            $table->unsignedBigInteger('user_id'); // Usuario que dio like
+            $table->unsignedBigInteger('user_id');
 
-        //     $table->foreign('place_id')->references('id')->on('places')->onDelete('cascade');
 
-        //    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // $table->foreign('place_id')->references('id')->on('places')->onDelete('cascade');
+            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            // $table->foreignId('place_id')->constrained()->onDelete('cascade');
+            // $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
             $table->timestamps();
         });

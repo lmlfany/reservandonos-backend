@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex align-items-center flex-column" style="margin-top: 60px;">
+    <v-container class="d-flex align-items-center flex-column" style="margin-top: 60px;">
       <v-row >
         <v-col v-for="(place, index) in placesToShow" :key="index" cols="12" md="4">
           <v-card class="mb-4 fill-height" style="max-height: 600px;">
@@ -44,7 +44,7 @@
         </v-col>
       </v-row>
       <v-btn @click="loadMore" class="btn btn-primary mt-4">Mostrar más</v-btn>
-    </div>
+    </v-container>
 </template>
 
   <script>
@@ -84,14 +84,15 @@
       }
     },
       toggleLike(place) {
-  axios.post('/like', { place_id: place.id })
-    .then(response => {
-      place.liked = !place.liked;
-      console.log(response.data.message);
-    })
-    .catch(error => {
-      console.error('Error al dar like:', error);
-    });
+        // placeId.liked = !placeId.liked;
+        axios.post('/like', { place_id: place.id })
+        .then(response => {
+          place.liked = !place.liked;
+          console.log(response.data.message);
+        })
+        .catch(error => {
+          console.error('Error al dar like:', error);
+        });
 },
 redirectToDetailPage(placeId) {
 

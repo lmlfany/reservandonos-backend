@@ -3,48 +3,55 @@
 namespace App\Http\Controllers;
 use App\Models\Interaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InteractionController extends Controller
 {
     public function like(Request $request)
-{
-    $request->validate([
-        'place_id' => 'required|exists:places,id',
-    ]);
+    {
+        $request->validate([
+            'place_id' => 'required|exists:places,id',
+        ]);
 
-    // Verificar si ya existe
-    $existingInteraction = Interaction::where('place_id', $request->place_id)
-                                       ->where('user_id', auth()->id())
-                                       ->first();
+        try {
+            $existingInteraction = Interaction::where('place_id', $request->place_id)
+                                               ->where('user_id', Auth::id())
+                                               ->first();
 
-    if ($existingInteraction) {
-        return response()->json(['error' => 'Ya has dado like a este lugar previamente'], 422);
+            if ($existingInteraction) {
+                return response()->json(['error' => 'Ya has dado like a este lugar previamente'], 422);
+            }
+
+            Interaction::create([
+                'place_id' => $request->place_id,
+                'user_id' => Auth::id(),
+            ]);
+
+            return response()->json(['message' => 'Like guardado con éxito']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al guardar el like: ' . $e->getMessage()], 500);
+        }
     }
 
-    // Nueva interacción
-    Interaction::create([
-        'place_id' => $request->place_id,
-        'user_id' => auth()->id(),
-    ]);
+    // Eliminar un like
+    public function unlike(Request $request)
+    {
+        $request->validate([
+            'place_id' => 'required|exists:places,id',
+        ]);
 
-    return response()->json(['message' => 'Like guardado con éxito']);
-}
+        try {
+            $deleted = Interaction::where('place_id', $request->place_id)
+                                  ->where('user_id', Auth::id())
+                                  ->delete();
 
-public function unlike(Request $request)
-{
-    $request->validate([
-        'place_id' => 'required|exists:places,id',
-    ]);
+            if (!$deleted) {
+                return response()->json(['error' => 'No se encontró ningún like para eliminar'], 404);
+            }
 
-    // Buscar y eliminar
-    $deleted = Interaction::where('place_id', $request->place_id)
-                          ->where('user_id', auth()->id())
-                          ->delete();
-
-    if (!$deleted) {
-        return response()->json(['error' => 'No se encontró ningún like para eliminar'], 404);
+            return response()->json(['message' => 'Like eliminado con éxito']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error al eliminar el like: ' . $e->getMessage()], 500);
+        }
     }
-
-    return response()->json(['message' => 'Like eliminado con éxito']);
-}
 }

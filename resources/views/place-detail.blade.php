@@ -4,7 +4,9 @@
     <div id="app">
         <v-app>
             <navbar></navbar>
-            <place-detail :place-id="{{ $placeId }}" :place-details="{{ json_encode($placeDetails) }}"></place-detail>
+            <v-container fluid>
+                <place-detail :place-id="{{ $placeId }}" :place-details="{{ json_encode($placeDetails) }}"></place-detail>
+            </v-container>
         </v-app>
     </div>
 @endsection

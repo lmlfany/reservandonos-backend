@@ -4,5 +4,7 @@
 {{--  <example-component></example-component>  --}}
 
 <navbar></navbar>
-<cards></cards>
+<v-container fluid>
+    <cards></cards>
+</v-container>
 @endsection
