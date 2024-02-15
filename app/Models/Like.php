@@ -11,4 +11,8 @@ class Like extends Model
     protected $fillable = [
         'place_id',
     ];
+
+    public function likes(){
+     return $this->belongsToMany(Like::class, 'likes')->withTimestamps();
+    }
 }

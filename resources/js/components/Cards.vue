@@ -84,7 +84,7 @@
       }
     },
     async likePlace(placeId) {
-        try {
+    try {
         const place = this.placesToShow.find(place => place.id === placeId);
         if (!place) return;
         const response = await axios.post(`/place/${placeId}/likes`);
@@ -93,7 +93,7 @@
     } catch (error) {
         console.error('Error al dar "me gusta" al lugar:', error);
     }
-    },
+},
 redirectToDetailPage(placeId) {
 
   const detailPageUrl = `/place-detail/${placeId}`;

@@ -31,8 +31,7 @@ class Place extends Model
         'isOutstanding'
     ];
 
-    public function interactions()
-    {
-        return $this->hasMany(Interaction::class);
-    }
+    public function likes(){
+        return $this->belongsToMany(Like::class, 'likes')->withTimestamps();
+       }
 }

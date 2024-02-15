@@ -5,46 +5,38 @@ namespace App\Http\Controllers;
 use App\Models\Like;
 use App\Models\Place;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class LikeController extends Controller
 {
-
     public function fetchInsert()
     {
-               try {
-            $places = Place::all();
+        try {
+            $placeIds = Place::pluck('id');
 
-            foreach ($places as $place) {
-                $existingLike = Like::where('place_id', $place->id)->first();
-
-                if (!$existingLike) {
-                    Like::create([
-                        'place_id' => $place->id,
-                    ]);
-                }
+            foreach ($placeIds as $placeId) {
+                Like::updateOrCreate(['place_id' => $placeId], ['likes_count' => 0]);
             }
 
-            return response()->json(['message' => 'Registros de likes creados con éxito desde los place_id existentes en la tabla places']);
+            return response()->json(['message' => 'Registros de likes creados con éxito para los IDs de place existentes']);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Error al llenar los registros de likes desde los place_id existentes en la tabla places: ' . $e->getMessage()], 500);
+            return response()->json(['error' => 'Error al crear registros de likes: ' . $e->getMessage()], 500);
         }
     }
 
-
-
-    public function store(Request $request, $placeId){
+    public function store(Request $request, $placeId)
+    {
         try {
-
-            Like::create([
-                'place_id' => $placeId,
-            ]);
+            DB::table('likes')->updateOrInsert(
+                ['place_id' => $placeId],
+                ['likes_count' => DB::raw('likes_count + 1')]
+            );
 
             return response()->json(['message' => '¡Has dado "me gusta" al lugar con éxito!']);
         } catch (\Exception $e) {
-
-            return response()->json(['error' => 'Error al dar "me gusta" al lugar: ' . $e->getMessage()], 500);
+            Log::error('Error al dar "me gusta" al lugar: ' . $e->getMessage());
+            return response()->json(['error' => 'Error al dar "me gusta" al lugar'], 500);
         }
     }
 }

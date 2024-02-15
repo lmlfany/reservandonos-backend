@@ -29,13 +29,13 @@
                 <span v-if="!placeDetail.amenities || placeDetail.amenities.length === 0">No se han encontrado amenidades.</span>
                 </div>
 
-                <!-- Botón de Reservar -->
+                <!-- Botones -->
                 <div class="text-center mt-4">
-                    <v-btn  class="mr-16">
-                        <v-icon color="primary">fa fa-heart</v-icon>
-                    </v-btn>
                     <v-btn color="primary" class="mr-16" @click="redirectToReservationForm(placeId)">Reservar</v-btn>
-                    <!-- Botón de "Me gusta" -->
+                    <v-btn class="btn-like" @click="likePlace(placeId)">
+                        <v-icon :color="placeDetail.liked  ? 'red' : 'grey'">fa fa-heart</v-icon>
+                    </v-btn>
+
                 </div>
             </v-card-text>
         </v-card-item>
@@ -68,6 +68,7 @@
   </template>
 
 <script>
+import axios from 'axios';
 export default {
   props: {
     placeId: {
@@ -104,12 +105,30 @@ export default {
     redirectToReservationForm(placeId) {
         window.location.href = `/reservation-form?placeId=${placeId}`;
 },
+async likePlace(placeId) {
+    try {
+        const response = await axios.post(`/place/${placeId}/likes`);
+        console.log(response.data.message);
+        this.placeDetail.liked = true;
+    } catch (error) {
+        console.error('Error al dar "me gusta" al lugar:', error);
+    }
+},
 
   }
 };
 </script>
 
 <style>
+    .btn-like {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 1;
+    }
+  .liked .btn-like i {
+    color: red;
+  }
 
 
 </style>

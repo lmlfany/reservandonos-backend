@@ -37,6 +37,7 @@ Route::get('/details', [PlaceDetailController::class, 'show'])->name('details');
 Route::get('/place-detail/{placeId}', [PlaceDetailController::class, 'showDetail'])->name('place-detail')->where('placeId', '[0-9]+');
 
 //like
+Route::get('/likes/fetchInsert', [LikeController::class, 'fetchInsert'])->name('likes.fetchInsert');
 Route::post('/place/{placeId}/likes', [LikeController::class, 'store'])->name('place-likes-store');
 
-Route::get('/fetch-like', [LikeController::class, 'fetchInsert'])->name('fetch-like');
+
