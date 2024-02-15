@@ -4,7 +4,7 @@
         <v-col v-for="(place, index) in placesToShow" :key="index" cols="12" md="4">
           <v-card class="mb-4 fill-height" style="max-height: 600px;">
             <!-- Botón de "Me gusta" -->
-            <v-btn class="btn-like" @click="toggleLike(place)">
+            <v-btn class="btn-like" @click="likePlace(place.id)">
                 <v-icon :color="place.liked ? 'red' : 'grey'">fa fa-heart</v-icon>
             </v-btn>
             <!-- Imagen del lugar -->
@@ -83,17 +83,17 @@
         console.log('No hay más lugares disponibles');
       }
     },
-      toggleLike(place) {
-        // placeId.liked = !placeId.liked;
-        axios.post('/like', { place_id: place.id })
-        .then(response => {
-          place.liked = !place.liked;
-          console.log(response.data.message);
-        })
-        .catch(error => {
-          console.error('Error al dar like:', error);
-        });
-},
+    async likePlace(placeId) {
+        try {
+        const place = this.placesToShow.find(place => place.id === placeId);
+        if (!place) return;
+        const response = await axios.post(`/place/${placeId}/likes`);
+        console.log(response.data.message);
+        place.liked = true;
+    } catch (error) {
+        console.error('Error al dar "me gusta" al lugar:', error);
+    }
+    },
 redirectToDetailPage(placeId) {
 
   const detailPageUrl = `/place-detail/${placeId}`;
