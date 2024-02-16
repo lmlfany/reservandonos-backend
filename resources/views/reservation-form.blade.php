@@ -3,7 +3,9 @@
 @section('content')
     <div id="app">
         <v-app>
-            <reservation-form></reservation-form>
+            <navbar></navbar>
+            <reservation-form :placeId="{{ json_encode($placeId) }}"></reservation-form>
         </v-app>
     </div>
 @endsection
+
