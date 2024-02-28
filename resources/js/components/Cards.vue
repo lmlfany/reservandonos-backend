@@ -11,7 +11,6 @@
             <v-img :src="place.image_url" alt="Place Image" height="200px" cover @click="redirectToDetailPage(place.id)"></v-img>
             <v-card-item class="d-flex" >
                 <v-card-text>
-
                     <v-row align="center">
                       <!-- Logo del lugar -->
                       <v-avatar class="mr-2">
@@ -101,6 +100,7 @@ redirectToDetailPage(placeId) {
   window.open(detailPageUrl, '_blank');
 },
     redirectToReservationForm(placeId) {
+
         window.location.href = `/reservation-form?placeId=${placeId}`;
 }
     }

@@ -1,12 +1,11 @@
 <?php
 
-use App\Http\Controllers\InteractionController;
 use App\Http\Controllers\LikeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PlaceController;
 use App\Http\Controllers\PlaceDetailController;
 use App\Http\Controllers\ReservationController;
-use App\Models\Interaction;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +27,7 @@ Route::get('/places', [PlaceController::class, 'show'])->name('places');
 
 // Reservaciones Reservations
 Route::get('/reservation-form', [ReservationController::class, 'showForm'])->name('reservation-form');
-Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations');
+Route::post('/reservation/{placeId}', [ReservationController::class, 'store']);
 // Route::get('/top-restaurants', [ReservationController::class, 'topRestaurants'])->name('top-restaurants');
 
 //Detalle establecimiento Place detail

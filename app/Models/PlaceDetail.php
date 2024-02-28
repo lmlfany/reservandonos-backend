@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PlaceDetail extends Model
 {
     use HasFactory;
+    protected $primaryKey = 'place_id';
     protected $fillable = [
         'place_id',
         'slug',
@@ -27,6 +28,15 @@ class PlaceDetail extends Model
         'status',
         'schedules',
         'amenities',
+        'reservations',
+
+    ];
+
+
+    protected $casts = [
+        'reservations' => 'array',
+        'amenities' => 'array',
+        'schedules' => 'array',
     ];
 
     public function place()

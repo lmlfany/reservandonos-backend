@@ -30,6 +30,8 @@ return new class extends Migration
             $table->boolean('status');
             $table->json('schedules');
             $table->json('amenities');
+
+            $table->json('reservations')->nullable();
             $table->timestamps();
         });
     }

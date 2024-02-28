@@ -4,7 +4,7 @@
     <div id="app">
         <v-app>
             <navbar></navbar>
-            <reservation-form :placeId="{{ json_encode($placeId) }}"></reservation-form>
+            <reservation-form :place="{{ json_encode($place) }}" :place-detail="{{ json_encode($placeDetail) }}"></reservation-form>
         </v-app>
     </div>
 @endsection

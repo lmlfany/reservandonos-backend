@@ -69,6 +69,7 @@ private function savePlaceDetails($placeDetails) {
         'gallery' => isset($placeDetails['gallery']) ? json_encode($placeDetails['gallery']) : null,
         'schedules' => isset($placeDetails['schedules']) ? json_encode($placeDetails['schedules']) : null,
         'amenities' => isset($placeDetails['amenities']) ? json_encode($placeDetails['amenities']) : null,
+        'reservations' => isset($placeDetails['reservations']) ? json_encode($placeDetails['reservations']) : null,
     ]);
 }
 
