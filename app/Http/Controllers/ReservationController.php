@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Reservation;
 use App\Models\Place;
 use App\Models\PlaceDetail;
+use App\Models\Client;
 use Illuminate\Validation\ValidationException;
 
 
@@ -15,12 +16,24 @@ class ReservationController extends Controller
     {
         try {
             $validatedData = $request->validate([
+                'place_id' => 'required|integer',
                 'client_name' => 'required|string',
                 'client_lastname' => 'required|string',
-                'place_id' => 'required|integer',
                 'reservation_date' => 'required|date',
                 'reservation_time' => 'required|date_format:H:i',
             ]);
+
+            $client = Client::where('name', strtolower($validatedData['client_name']))
+                            ->where('lastname', strtolower($validatedData['client_lastname']))
+                            ->first();
+
+            if (!$client) {
+                $client = new Client();
+                $client->name = strtolower($validatedData['client_name']);
+                $client->lastname = strtolower($validatedData['client_lastname']);
+                $client->save();
+            }
+
 
             //Verificacion de reserva
             $existingReservation = Reservation::where('reservation_date', $validatedData['reservation_date'])
@@ -32,32 +45,26 @@ class ReservationController extends Controller
                 return response()->json(['error' => 'Ya existe una reserva para esta fecha y lugar'], 400);
             }
 
-            //Verificacion de cliente
-            // $client = DB::table('reservations')
-            //     ->whereRaw('LOWER(client_name) = ?', [strtolower($validatedData['client_name'])])
-            //     // ->whereRaw('LOWER(client_lastname) = ?', [strtolower($validatedData['client_lastname'])])
-            //     ->first();
 
-            //     if (!$client) {
-            //         $clientId = DB::table('reservations')->insertGetId([
-            //             'client_name' => strtolower($validatedData['client_name']),
-            //             // 'client_lastname' => strtolower($validatedData['client_lastname']),
-            //         ]);
-            //     } else {
-            //         $clientId = $client->id;
-            //     }
+            $existingReservationClient = Reservation::where('reservation_date', $validatedData['reservation_date'])
+                ->where('client_id', $client->id)
+                ->first();
 
-
-
+            if ($existingReservationClient) {
+                return response()->json(['error' => 'El cliente ya tiene una reserva para esta fecha'], 400);
+            }
 
 
             $reservation = new Reservation();
-            $reservation->client_name = $validatedData['client_name'];
-            $reservation->client_lastname = $validatedData['client_lastname'];
+            $reservation->client_id = $client->id;
+            // $reservation->client_name = $validatedData['client_name'];
+            // $reservation->client_lastname = $validatedData['client_lastname'];
+            $reservation->place_id = $placeId;
             $reservation->reservation_date = $validatedData['reservation_date'];
             $reservation->reservation_time = $validatedData['reservation_time'];
-            $reservation->place_id = $placeId;
             $reservation->save();
+
+
 
             return response()->json(['message' => 'Reserva creada exitosamente'], 201);
 

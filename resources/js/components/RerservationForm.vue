@@ -52,9 +52,8 @@ export default {
     const clientName = ref('');
     const clientLast = ref('');
     const reservationDate = ref(new Date().toISOString().substr(0, 10));
-
     const reservationTime = ref('');
-
+    const placeId = ref(props.place.id);
     const formattedPlaceId = computed(() => {
       return `Place ID: ${props.place.id}`;
     });
@@ -130,12 +129,13 @@ export default {
         const formData = {
           client_name: clientName.value,
           client_lastname: clientLast.value,
-          place_id: props.place.id,
+          place_id: placeId.value,
           reservation_date: reservationDate.value,
           reservation_time: reservationTime.value
         };
 
-        const response = await axios.post(`/reservation/${props.place.id}`, formData);
+
+        const response = await axios.post(`/reservation/${placeId.value}`, formData);
         alert('Se creó con éxito!');
         console.log('Response:', response.data);
       } catch (error) {
