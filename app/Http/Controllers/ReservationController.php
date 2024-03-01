@@ -23,14 +23,17 @@ class ReservationController extends Controller
                 'reservation_time' => 'required|date_format:H:i',
             ]);
 
-            $client = Client::where('name', strtolower($validatedData['client_name']))
-                            ->where('lastname', strtolower($validatedData['client_lastname']))
-                            ->first();
+            $client_name = strtolower($validatedData['client_name']);
+            $client_lastname = strtolower($validatedData['client_lastname']);
+
+            $client = Client::where('name', $client_name)
+                ->where('lastname', $client_lastname)
+                ->first();
 
             if (!$client) {
                 $client = new Client();
-                $client->name = strtolower($validatedData['client_name']);
-                $client->lastname = strtolower($validatedData['client_lastname']);
+                $client->name = $client_name;
+                $client->lastname = $client_lastname;
                 $client->save();
             }
 
@@ -57,8 +60,8 @@ class ReservationController extends Controller
 
             $reservation = new Reservation();
             $reservation->client_id = $client->id;
-            // $reservation->client_name = $validatedData['client_name'];
-            // $reservation->client_lastname = $validatedData['client_lastname'];
+            $reservation->client_name = $validatedData['client_name'];
+            $reservation->client_lastname = $validatedData['client_lastname'];
             $reservation->place_id = $placeId;
             $reservation->reservation_date = $validatedData['reservation_date'];
             $reservation->reservation_time = $validatedData['reservation_time'];
