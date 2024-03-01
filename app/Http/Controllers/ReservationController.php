@@ -7,6 +7,7 @@ use App\Models\Reservation;
 use App\Models\Place;
 use App\Models\PlaceDetail;
 use App\Models\Client;
+use App\Models\Like;
 use Illuminate\Validation\ValidationException;
 
 
@@ -86,5 +87,44 @@ class ReservationController extends Controller
         return view('reservation-form', compact('place', 'placeDetail'));
     }
 
+    public function topRestaurants()
+{
+    // Cantidad total de reservaciones
+    $topRestaurants = Place::select('places.*')
+        ->selectRaw('COUNT(reservations.id) as total_reservations')
+        ->leftJoin('reservations', 'places.id', '=', 'reservations.place_id')
+        ->groupBy('places.id')
+        ->orderByDesc('total_reservations')
+        ->limit(5)
+        ->get();
+
+    // Cliente más frecuente
+    foreach ($topRestaurants as $restaurant) {
+        $mostFrequentClient = Reservation::select('client_id')
+            ->selectRaw('COUNT(client_id) as reservation_count')
+            ->where('place_id', $restaurant->id)
+            ->groupBy('client_id')
+            ->orderByDesc('reservation_count')
+            ->first();
+
+        if ($mostFrequentClient) {
+            $client = Client::find($mostFrequentClient->client_id);
+            $restaurant->most_frequent_client = $client ? $client->name . ' ' . $client->lastname : 'N/A';
+        } else {
+            $restaurant->most_frequent_client = 'N/A';
+        }
+
+        // Cantidad de likes
+        $likeCount = Like::where('place_id', $restaurant->id)->value('likes_count');
+        $restaurant->likes_count = $likeCount ?? 0;
+    }
+
+    return response()->json($topRestaurants);
+}
+
+public function showTop(){
+
+    return view('top-restaurants');
+}
 
 }

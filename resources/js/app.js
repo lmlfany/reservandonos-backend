@@ -21,6 +21,7 @@ import Cards from './components/Cards.vue';
 import Navbar from './components/Navbar.vue';
 import Reservation from './components/RerservationForm.vue';
 import PlaceDetail from './components/PlaceDetail.vue';
+import TopRestaurants from './components/TopRestaurants.vue';
 
 const app = createApp({});
 
@@ -29,6 +30,7 @@ app.component('cards', Cards);
 app.component('navbar', Navbar);
 app.component('reservation-form', Reservation);
 app.component('place-detail', PlaceDetail);
+app.component('top-restaurants', TopRestaurants);
 
 const vuetify = createVuetify({
     components,

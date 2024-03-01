@@ -37,7 +37,7 @@
         window.location.href = `/`;
       },
       goToLikesAndReservations() {
-        console.log('Ir a Likes y Reservaciones');
+        window.location.href = '/top-restaurants';
       },
     },
     mounted() {

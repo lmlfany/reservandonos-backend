@@ -28,7 +28,8 @@ Route::get('/places', [PlaceController::class, 'show'])->name('places');
 // Reservaciones Reservations
 Route::get('/reservation-form', [ReservationController::class, 'showForm'])->name('reservation-form');
 Route::post('/reservation/{placeId}', [ReservationController::class, 'store']);
-// Route::get('/top-restaurants', [ReservationController::class, 'topRestaurants'])->name('top-restaurants');
+Route::get('/fetch-top-restaurants', [ReservationController::class, 'topRestaurants'])->name('fetch-top-restaurants');
+Route::get('/top-restaurants', [ReservationController::class, 'showTop'])->name('top-restaurants');
 
 //Detalle establecimiento Place detail
 Route::get('/fetch-details', [PlaceDetailController::class, 'fetchInsert'])->name('fetch-details');
