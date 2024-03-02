@@ -29,6 +29,8 @@
                 <span v-if="!placeDetail.amenities || placeDetail.amenities.length === 0">No se han encontrado amenidades.</span>
                 </div>
 
+
+
                 <!-- Botones -->
                 <div class="text-center mt-4">
                     <v-btn color="primary" class="mr-16" @click="redirectToReservationForm(placeId)">Reservar</v-btn>
@@ -44,27 +46,37 @@
     <v-col cols="6">
         <v-card-title v-if="placeDetail.gallery && placeDetail.gallery.length > 0">Galería</v-card-title>
 
-<v-carousel hide-delimiters
-  v-if="placeDetail.gallery && placeDetail.gallery.length > 0"
-  cycle
-  height="600"
-  hide-delimiter-background
-  show-arrows="hover"
->
-  <v-carousel-item
-    v-for="(image, index) in placeDetail.gallery"
-    :key="index"
-  >
-    <v-sheet height="100%">
-      <v-img :src="image.file" aspect-ratio="1" contain="cover" :preload="index === 0"></v-img>
-    </v-sheet>
-  </v-carousel-item>
-</v-carousel>
+        <v-carousel hide-delimiters
+            v-if="placeDetail.gallery && placeDetail.gallery.length > 0"
+                cycle
+                height="600"
+                hide-delimiter-background
+                show-arrows="hover"
+            >
+            <v-carousel-item
+                v-for="(image, index) in placeDetail.gallery"
+                    :key="index"
+                >
+                <v-sheet height="100%">
+                    <v-img :src="image.file" aspect-ratio="1" contain="cover" :preload="index === 0"></v-img>
+                </v-sheet>
+            </v-carousel-item>
+        </v-carousel>
 
-        </v-col>
+    </v-col>
+
+
       </v-row>
     </v-card>
     <span v-else>Cargando detalles del lugar...</span>
+
+    <!-- Descripcion -->
+    <v-divider></v-divider>
+    <v-container>
+
+        <div v-html="placeDetail.description"></div>
+    </v-container>
+
   </template>
 
 <script>
@@ -96,6 +108,7 @@ export default {
     this.placeDetail.gallery = JSON.parse(this.placeDetail.gallery);
     this.placeDetail.schedules = JSON.parse(this.placeDetail.schedules);
     this.placeDetail.amenities = JSON.parse(this.placeDetail.amenities);
+    this.placeDetail.description = JSON.parse(this.placeDetail.description);
   },
   methods: {
     reserve() {

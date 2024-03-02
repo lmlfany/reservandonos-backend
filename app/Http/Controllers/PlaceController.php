@@ -72,7 +72,6 @@ class PlaceController extends Controller
             return response()->json(['error' => 'Failed to fetch data from external API'], $response->status());
         }
     }
-
             return response()->json(['message' => 'Places synchronized successfully']);
     }
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\PlaceDetail;
 use Illuminate\Support\Facades\Http;
 use App\Models\Place;
@@ -44,9 +43,9 @@ class PlaceDetailController extends Controller
 
 
     private function placeExists($placeId)
-{
-    return Place::where('id', $placeId)->exists();
-}
+    {
+        return Place::where('id', $placeId)->exists();
+    }
 
 
 private function savePlaceDetails($placeDetails) {
@@ -80,16 +79,14 @@ private function savePlaceDetails($placeDetails) {
      return response()->json(['placeDetails' => $placeDetails]);
     }
 
-public function showDetail($placeId)
-{
+    public function showDetail($placeId)
+    {
+        $placeDetails = PlaceDetail::where('place_id', $placeId)->first();
 
-
-    $placeDetails = PlaceDetail::where('place_id', $placeId)->first();
-
-    if ($placeDetails) {
-        return view('place-detail', ['placeId' => $placeId, 'placeDetails' => $placeDetails]);
-    } else {
-        return response()->json(['error' => 'Place details not found for place ID ' . $placeId], 404);
+        if ($placeDetails) {
+            return view('place-detail', ['placeId' => $placeId, 'placeDetails' => $placeDetails]);
+        } else {
+            return response()->json(['error' => 'Place details not found for place ID ' . $placeId], 404);
+        }
     }
-}
 }
