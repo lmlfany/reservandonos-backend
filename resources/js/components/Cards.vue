@@ -2,7 +2,7 @@
     <v-container class="d-flex align-items-center flex-column" style="margin-top: 60px;">
       <v-row >
         <v-col v-for="(place, index) in placesToShow" :key="index" cols="12" md="4">
-          <v-card class="mb-4 fill-height" style="max-height: 600px;">
+          <v-card :loading="loading" class="mx-auto my-4 fill-height" style="max-height: 520px;">
             <!-- Botón de "Me gusta" -->
             <v-btn class="btn-like" @click="likePlace(place.id)">
                 <v-icon :color="place.liked ? 'red' : 'grey'">fa fa-heart</v-icon>
@@ -13,28 +13,62 @@
                 <v-card-text>
                     <v-row align="center">
                       <!-- Logo del lugar -->
-                      <v-avatar class="mr-2">
+                      <v-avatar  class="mr-2">
                         <v-img :src="place.logo_url" alt="Place Logo"></v-img>
                       </v-avatar>
-                      <h5 class="card-title" @click="redirectToDetailPage(place.id)">{{ place.name }}</h5>
+                      <div style="max-width: 260px;">
+                          <h5 class="card-title" @click="redirectToDetailPage(place.id)">{{ place.name }}</h5>
+                      </div>
                     </v-row>
                 </v-card-text>
-              <div style="margin-top: 16px;">
+                <div style="margin-top: 16px;">
+                    <p>
+                        <v-icon
+                        color="error"
+                        icon="fa-solid fa-location-dot"
+                        size="20px"
+                        ></v-icon>
+                        <span class="text-subtitle-2 ml-2">{{ place.location }}</span>
+                    </p>
                 <!-- Categorías del lugar -->
-                <v-chip-group class="px-4">
+                <v-chip-group class="px-1 mt-3">
                     <v-chip v-for="category in place.categories.split(',')" :key="category" outlined>{{ category }}</v-chip>
                 </v-chip-group>
                 <v-card-text>
-
-                    <p class="card-text">{{ place.schedule }}</p>
-                    <p class="card-text">{{ place.location }}</p>
-                    <v-row class="mt-2 mb-1 justify-center">
-                        <p class="card-text mr-16">{{ place.price_range }}</p>
-                        <v-icon v-for="n in place.score" :key="n" color="yellow" >fa fa-star</v-icon>
+                    <v-row
+                        align="center"
+                        class="mx-0 my-1">
+                        <p class="card-text ms-4">
+                            <v-icon
+                            color="primary"
+                            icon="fa-regular fa-clock"
+                            size="16px"
+                            ></v-icon>
+                        {{ place.schedule }}</p>
+                        <p class="card-text ml-16">
+                            <v-icon
+                            color="green"
+                            icon="fa-solid fa-money-bill"
+                            size="16px"
+                            ></v-icon>
+                            {{ place.price_range }}</p>
+                    </v-row>
+                    <v-row class="my-4 justify-center">
+                        <v-rating
+                            :model-value="place.score"
+                            color="amber"
+                            density="compact"
+                            size="small"
+                            half-increments
+                            readonly
+                        ></v-rating>
+                        <div class=" text-subtitle-2 text-grey ms-4">
+                            {{ place.score }} {{ place.numRatings }}
+                        </div>
                     </v-row>
                     <v-row class="mt-2 mb-1 justify-center">
-                        <v-btn color="primary" class="mr-16" @click="redirectToReservationForm(place.id)">Reservar</v-btn>
-                        <v-btn color="primary" @click="redirectToDetailPage(place.id)">Ver detalles</v-btn>
+                        <v-btn color="light-blue" class="mr-16" @click="redirectToReservationForm(place.id)">Reservar</v-btn>
+                        <v-btn color="light-blue" @click="redirectToDetailPage(place.id)">Ver detalles</v-btn>
                     </v-row>
                 </v-card-text>
               </div>
@@ -114,13 +148,14 @@ redirectToDetailPage(placeId) {
       right: 8px;
       z-index: 1;
     }
-  .liked .btn-like i {
-    color: red;
-  }
+
+    .liked .btn-like i {
+        color: red;
+    }
 
 
 .card-title {
-  font-size: 1.25rem;
+  font-size: 16px;
   margin-top: 8px;
 }
   </style>

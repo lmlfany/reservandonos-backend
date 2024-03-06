@@ -7,20 +7,9 @@
         </v-badge>
       </v-btn>
       <v-toolbar-title :elevation="8" class="ml-4">
-        <span class="text-blue"> Reservandonos </span>
+        <span class="text-blue" @click="goToHomePage"> Reservandonos test </span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-badge color="primary" overlap content="2" class="mr-2 mt-1">
-        <v-avatar size="40" color="blue">
-          <v-icon x-small color="primary" icon="fa-plus">fa-plus</v-icon>
-        </v-avatar>
-      </v-badge>
-      <v-badge color="primary" overlap content="2" class="mr-2 mt-1">
-        <v-avatar size="40" color="blue">
-          <v-icon x-small color="primary" icon="fa-check">fa-check</v-icon>
-        </v-avatar>
-      </v-badge>
-      <span class="text-grey d-none d-sm-flex">Test</span>
       <v-btn text @click="goToLikesAndReservations">
         Likes & Reservaciones
       </v-btn>

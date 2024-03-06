@@ -3,8 +3,14 @@
       <v-row>
         <v-col cols="6">
           <v-card-item>
-            <v-card-title>{{ placeDetail.name }}</v-card-title>
-            <v-card-text class="mt-8">
+            <v-row align="center" justify="left">
+                    <v-avatar class="mr-2">
+                        <v-img :src="placeDetail.logo_img" alt="Place Logo"></v-img>
+                    </v-avatar>
+                    <v-card-title class="text-h6">{{ placeDetail.name }}</v-card-title>
+                </v-row>
+            <v-card-title class="text-subtitle-1 mt-6"> Rango de precio: {{ placeDetail.range_price }}</v-card-title>
+            <v-card-text class="mt-4">
 
                 <!-- Horarios de trabajo -->
                 <v-divider class="mx-4 mb-1"></v-divider>
@@ -33,8 +39,8 @@
 
                 <!-- Botones -->
                 <div class="text-center mt-4">
-                    <v-btn color="primary" class="mr-16" @click="redirectToReservationForm(placeId)">Reservar</v-btn>
-                    <v-btn class="btn-like" @click="likePlace(placeId)">
+                    <v-btn color="blue" dark block tile class="mt-16" @click="redirectToReservationForm(placeId)">Reservar</v-btn>
+                    <v-btn class="btn-like"  @click="likePlace(placeId)">
                         <v-icon :color="placeDetail.liked  ? 'red' : 'grey'">fa fa-heart</v-icon>
                     </v-btn>
 
@@ -44,14 +50,13 @@
     </v-col>
 
     <v-col cols="6">
-        <v-card-title v-if="placeDetail.gallery && placeDetail.gallery.length > 0">Galería</v-card-title>
-
-        <v-carousel hide-delimiters
+        <v-card-title v-if="placeDetail.gallery && placeDetail.gallery.length > 0" ></v-card-title>
+        <v-carousel :show-arrows="false" hide-delimiters
             v-if="placeDetail.gallery && placeDetail.gallery.length > 0"
                 cycle
                 height="600"
                 hide-delimiter-background
-                show-arrows="hover"
+                progress="primary"
             >
             <v-carousel-item
                 v-for="(image, index) in placeDetail.gallery"
@@ -72,10 +77,10 @@
 
     <!-- Descripcion -->
     <v-divider></v-divider>
-    <v-container>
+    <!-- <v-container>
 
         <div v-html="placeDetail.description"></div>
-    </v-container>
+    </v-container> -->
 
   </template>
 
@@ -108,7 +113,7 @@ export default {
     this.placeDetail.gallery = JSON.parse(this.placeDetail.gallery);
     this.placeDetail.schedules = JSON.parse(this.placeDetail.schedules);
     this.placeDetail.amenities = JSON.parse(this.placeDetail.amenities);
-    this.placeDetail.description = JSON.parse(this.placeDetail.description);
+        // this.placeDetail.description = JSON.parse(this.placeDetail.description);
   },
   methods: {
     reserve() {

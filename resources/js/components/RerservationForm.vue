@@ -1,34 +1,79 @@
 <template>
     <v-container class="d-flex align-items-center flex-column" style="margin-top: 60px;">
-      <p>{{ formattedPlaceId }}</p>
-      <v-row>
-        <v-col cols="6">
-          <v-img :src="place.image_url" alt="Place Image" height="600px" width="600px" cover></v-img>
+      <!-- <p>{{ formattedPlaceId }}</p> -->
+
+      <v-row >
+        <v-col cols="12" md="6" >
+            <div class="imageForm" :style="{ backgroundImage: 'url(' + place.image_url + ')' }">
+                <div style="background-color: rgb(0 0 0 / 40%);">
+                    <v-card-text class="text-white"  >
+                        <h1 class="text-center">{{ place.name }}</h1>
+                        <h2 class="text-center mb-4"> {{ place.location }}</h2>
+                        <v-btn tile outlined dark @click="redirectToDetailPage(place.id)">Ver detalles</v-btn>
+                    </v-card-text>
+                </div>
+            </div>
         </v-col>
-        <v-col cols="6">
-          <v-card>
-            <v-card-item>
-              <v-row align="center">
-                <v-avatar class="mr-2">
-                  <v-img :src="place.logo_url" alt="Place Logo"></v-img>
-                </v-avatar>
-                <v-card-title>{{ place.name }}</v-card-title>
-              </v-row>
-            </v-card-item>
-            <v-card-item>
-              <v-card-text>
-                <form @submit.prevent="submitForm">
-                  <v-text-field v-model="clientName" label="Nombre"></v-text-field>
-                  <v-text-field v-model="clientLast" label="Apellido"></v-text-field>
-                  <v-text-field v-model="reservationDate" label="Fecha de Reserva" type="date" @input="updateAvailableTimes"></v-text-field>
-                  <v-select v-model="reservationTime" :items="availableTimes" label="Hora de Reserva"></v-select>
-                  <v-btn type="submit">Reservar</v-btn>
-                </form>
-              </v-card-text>
-            </v-card-item>
-          </v-card>
-        </v-col>
-      </v-row>
+
+        <v-col cols="12" md="6">
+            <v-card-text class="mt-12">
+                <v-row align="center" justify="left">
+                    <v-avatar class="mr-1">
+                        <v-img :src="place.logo_url" alt="Place Logo"></v-img>
+                    </v-avatar>
+                    <v-card-title>{{ place.name }}</v-card-title>
+                </v-row>
+                <v-row align="center" justify="center">
+                    <v-col cols="12" sm="12">
+                        <form @submit.prevent="submitForm">
+                            <v-row>
+                               <v-col cols="12" sm="6">
+                                    <v-text-field
+                                        label="Nombre"
+                                        outlined
+                                        dense
+                                        color="blue"
+                                        autocomplete="false"
+                                        class="mt-4"
+                                        v-model="clientName"
+                                    />
+                               </v-col>
+                               <v-col cols="12" sm="6">
+                                    <v-text-field
+                                        label="Apellido"
+                                        outlined
+                                        dense
+                                        color="blue"
+                                        autocomplete="false"
+                                        class="mt-4"
+                                        v-model="clientLast"
+                                    />
+                                </v-col>
+                            </v-row>
+                            <v-text-field
+                                label="Fecha de reserva"
+                                outlined
+                                dense
+                                color="blue"
+                                autocomplete="false"
+                                v-model="reservationDate"
+                                type="date" @input="updateAvailableTimes"
+                            />
+                            <v-select v-model="reservationTime" :items="availableTimes"
+                                label="Hora de Reserva">
+                            </v-select>
+                            <v-btn color="blue" dark block tile type="submit">Reservar</v-btn>
+                        </form>
+                    <v-row>
+                </v-row>
+            </v-col>
+        </v-row>
+    </v-card-text>
+</v-col>
+</v-row>
+
+
+
     </v-container>
   </template>
 
@@ -151,6 +196,24 @@ export default {
       updateAvailableTimes,
       today
     };
+  },
+  methods: {
+    redirectToDetailPage(placeId) {
+
+        window.location.href = `/place-detail/${placeId}`;
+
+},
   }
 };
 </script>
+
+<style>
+    .imageForm {
+        text-align: center;
+        padding: 180px 0;
+        background-size: cover;
+        background-position: right;
+        height: 600px;
+    }
+
+</style>
